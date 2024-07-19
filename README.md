@@ -1,2 +1,2 @@
 # EuronVoiceAssistant
-This is a AI Voice Assistant.
+This is an AI Voice Assistant.
