@@ -1,8 +1,7 @@
 import os
-
-import pyaudio
+import pyaudio  # Allows to play and record audio
 import streamlit as st
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferMemory  # To store messages and extracts messages from a variable
 
 from utils import record_audio_chunk, transcribe_audio, get_response_llm, play_text_to_speech, load_whisper
 

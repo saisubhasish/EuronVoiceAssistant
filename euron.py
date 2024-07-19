@@ -1,23 +1,11 @@
-import logging
-import streamlit as st
-
-
-from langchain.adapters import openai as lc_openai
-from PIL import Image, ImageEnhance
-import time
-import json
-import requests
-import base64
-from dotenv import load_dotenv, find_dotenv
-
 import os
-
+import base64
+import logging
 import pyaudio
 import streamlit as st
+from dotenv import load_dotenv, find_dotenv
 from langchain.memory import ConversationBufferMemory
-
 from utils import record_audio_chunk, transcribe_audio, get_response_llm, play_text_to_speech, load_whisper
-from openai import OpenAI, OpenAIError
 
 
 chunk_file = 'temp_audio_chunk.wav'
@@ -100,7 +88,7 @@ def main():
     st.sidebar.markdown("---")
     
     # Sidebar for Mode Selection
-    mode = st.sidebar.radio("Select Mode:", options=["Talk with Euron Assistant", "Chat with Euron Assistant"], index=0)
+    mode = st.sidebar.radio("Select Mode:", options=["Talk with Euron Assistant"], index=0)
     st.sidebar.markdown("---")
     # Toggle checkbox in the sidebar for basic interactions
     show_basic_info = st.sidebar.toggle("Show Basic Interactions", value=True)
@@ -175,8 +163,6 @@ def main():
                     break  # Exit the while loop
             print("End Conversation")
 
-    else:
-        st.write("Chat with Euron Assistant")
 
 if __name__ == "__main__":
     main()
