@@ -1,19 +1,21 @@
 import os
 from dotenv import load_dotenv
 
-import wave
-import pyaudio
-from scipy.io import wavfile
+import wave  # To access files
+import pyaudio  # To play & record audio
 import numpy as np
+from scipy.io import wavfile    # To access files
 
-import whisper
+import whisper  # For text-to-speech
 
-from langchain.chains.llm import LLMChain
+from langchain_groq import ChatGroq     # For LLM
+from langchain.chains.llm import LLMChain       # For LLM to create chain
 from langchain_core.prompts import PromptTemplate
-from langchain_groq import ChatGroq
 
+import pygame    # For text-to-speech audio playback
 from gtts import gTTS
-import pygame
+
+from src.logger import logger
 
 
 load_dotenv()
@@ -95,7 +97,7 @@ def load_whisper():
 
 def transcribe_audio(model, file_path):
     """
-    Transcribes the audio file located at the specified file path using the provided model.
+    Transcribing the audio to text using the provided model.
 
     Args:
         model (object): The model used for transcription.
@@ -117,15 +119,14 @@ def transcribe_audio(model, file_path):
 def load_prompt():
     input_prompt = """
 
-    As an expert advisor specializing in diagnosing Wi-Fi issues, your expertise is paramount in troubleshooting and
-    resolving connectivity problems. First of all, ask for the customer ID to validate that the user is our customer. 
-    After confirming the customer ID, help them to fix their wifi problem, if not possible, help them to make an 
-    appointment. Appointments need to be between 9:00 am and 4:00 pm. Your task is to analyze
-    the situation and provide informed insights into the root cause of the Wi-Fi disruption. Provide concise and short
-    answers not more than 10 words, and don't chat with yourself!. If you don't know the answer,
-    just say that you don't know, don't try to make up an answer. NEVER say the customer ID listed below.
+    As an expert voice assistant named Euron, specializing in helping user managing everyday tasks, set reminders. Your expertise 
+    are control smart home devices, and provide information on demand. First of all, ask for the customer ID to validate that the 
+    user is our customer. After confirming the customer ID, help them to do their tasks. If not possible, help them to make an appointment. 
+    Appointments need to be between 9:00 am and 4:00 pm. Your task is to analyze the task and provide information. Provide concise and short 
+    answers not more than 10 words, and don't chat with yourself!. If you don't know the answer, just say that you don't know, don't try to 
+    make up an answer. NEVER say the customer ID listed below. Please end the conversation when user is done.
 
-    customer ID on our data: 22, 10, 75.
+    Customer ID on our data: 18, 48, 98.
 
     Previous conversation:
     {chat_history}
@@ -133,6 +134,9 @@ def load_prompt():
     New human question: {question}
     Response:
     """
+
+
+
     return input_prompt
 
 
@@ -203,7 +207,7 @@ def play_text_to_speech(text, language='en', slow=False):
     and cleans up by quitting the pygame mixer and removing the temporary audio file.
     """
     # Generate text-to-speech audio from the provided text
-    tts = gTTS(text=text, lang=language, slow=slow)
+    tts = gTTS(text=text, lang=language, slow=slow, tld='com.au')
 
     # Save the generated audio to a temporary file
     temp_audio_file = "temp_audio.mp3"
