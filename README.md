@@ -1,4 +1,6 @@
 # Versatile Voice Assistant for Everyday Tasks - Euron
+![Screenshot 2024-07-22 160239](https://github.com/user-attachments/assets/e849e9b3-f6a9-4186-ab6f-6825436c6025)
+
 ## Overview
 Euron is a multitasking voice assistant designed to help users manage daily tasks, set reminders, control smart home devices, and provide information on demand. This AI-driven project aims to enhance everyday productivity and convenience through seamless voice interactions.
 
