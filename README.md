@@ -11,8 +11,11 @@ Euron is a multitasking voice assistant designed to help users manage daily task
 
 ## Technologies Used
 Wisper: To convert speech to text
+
 gTTS: To convert text to speech
+
 Streamlit: Framework for creating interactive web applications.
+
 GROQ: Leveraged LLM for generating and finalizing script content.
 
 ## Installation
