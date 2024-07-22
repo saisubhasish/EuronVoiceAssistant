@@ -6,17 +6,15 @@ import pyaudio  # To play & record audio
 import numpy as np
 from scipy.io import wavfile    # To access files
 
-import whisper  # For text-to-speech
-
 from langchain_groq import ChatGroq     # For LLM
 from langchain.chains.llm import LLMChain       # For LLM to create chain
 from langchain_core.prompts import PromptTemplate
 
 import pygame    # For text-to-speech audio playback
-from gtts import gTTS
+import whisper  # For speech-to-text
+from gtts import gTTS    # For text-to-speech
 
 from src.logger import logger
-
 
 load_dotenv()
 
@@ -121,7 +119,7 @@ def load_prompt():
 
     As an expert voice assistant named Euron, specializing in helping user managing everyday tasks, set reminders. Your expertise 
     are control smart home devices, and provide information on demand. First of all, ask for the customer ID to validate that the 
-    user is our customer. After confirming the customer ID, help them to do their tasks. If not possible, help them to make an appointment. 
+    user is our customer, do it once. After confirming the customer ID, help them to do their tasks. If not possible, help them to make an appointment. 
     Appointments need to be between 9:00 am and 4:00 pm. Your task is to analyze the task and provide information. Provide concise and short 
     answers not more than 10 words, and don't chat with yourself!. If you don't know the answer, just say that you don't know, don't try to 
     make up an answer. NEVER say the customer ID listed below. Please end the conversation when user is done.
@@ -176,6 +174,7 @@ def get_response_llm(user_question, memory):
 
     # Look how "chat_history" is an input variable to the prompt template
     prompt = PromptTemplate.from_template(input_prompt)
+    logger.info(f"Prompt: {prompt}")
 
     chain = LLMChain(
         llm=chat_groq,
