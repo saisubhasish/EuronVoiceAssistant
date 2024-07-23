@@ -1,5 +1,5 @@
 import os
-import base64   # Dinsplay image to base64
+import base64   # Display image to base64
 import logging
 import pyaudio  # To play and record audio
 import streamlit as st

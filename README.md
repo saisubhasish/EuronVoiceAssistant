@@ -16,6 +16,8 @@ Wisper: To convert speech to text
 
 gTTS: To convert text to speech
 
+FastAPI: Framework to develop backend APIs.
+
 Streamlit: Framework for creating interactive web applications.
 
 GROQ: Leveraged LLM for generating and finalizing script content.

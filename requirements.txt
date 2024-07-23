@@ -9,3 +9,4 @@ langchain-groq==0.1.4
 scipy==1.13.1
 ffmpeg-python==0.2.0
 openai==1.35.13
+uvicorn==0.30.0
