@@ -21,6 +21,7 @@ FastAPI: Framework to develop backend APIs.
 Streamlit: Framework for creating interactive web applications.
 
 GROQ: Leveraged LLM for generating and finalizing script content.
+![image](https://github.com/user-attachments/assets/9663b90f-798a-4afe-8969-e897a8cfde25)
 
 ## Installation
 1. Clone the repository:
