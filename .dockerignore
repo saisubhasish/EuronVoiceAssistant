@@ -1,0 +1,32 @@
+# Ignore Python cache files
+__pycache__
+*.pyc
+*.pyo
+
+# Ignore logs
+logs/
+
+venv/
+
+# Ignore the environment file
+.env
+
+# Ignore Docker-related files
+Dockerfile
+.dockerignore
+
+# Ignore git-related files
+.git
+.gitignore
+
+# Ignore IDE and editor-related files
+.vscode/
+.idea/
+*.swp
+
+# Ignore other unnecessary files
+flow_diagram/
+LICENSE
+README.md
+temp_audio.mp3
+test.ipynb

@@ -132,3 +132,4 @@ dmypy.json
 # ignore log files
 *.log
 *.png
+test.ipynb

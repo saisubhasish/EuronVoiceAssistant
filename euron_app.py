@@ -1,13 +1,13 @@
 import os
-import sys
-import base64
+import base64   # Display image to base64
 import logging
-import pyaudio
+import pyaudio  # To play and record audio
 import streamlit as st
-import requests
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferMemory   # To store messages and extracts messages from a variable
+
 from src.logger import logger
-from utils import record_audio_chunk, transcribe_audio, play_text_to_speech, load_whisper
+from utils import record_audio_chunk, transcribe_audio, get_response_llm, play_text_to_speech, load_whisper
+
 
 chunk_file = 'temp_audio_chunk.wav'
 model = load_whisper()
@@ -42,7 +42,7 @@ st.title("Euron Voice Assistant")
 def img_to_base64(image_path):
     """Convert image to base64"""
     with open(image_path, "rb") as img_file:
-        return base64.b64encode(img_file.read()).decode()
+            return base64.b64encode(img_file.read()).decode()
 
 def main():
     """
@@ -73,6 +73,11 @@ def main():
         """,
         unsafe_allow_html=True,
     )
+
+    # Function to convert image to base64
+    def img_to_base64(image_path):
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
 
     # Load and display sidebar image with glowing effect
     img_path = "images/euron_bot.png"
@@ -116,6 +121,8 @@ def main():
     img_path = "images/euron.png"  # Replace with the actual image path
     img_base64 = img_to_base64(img_path)
 
+
+
     # Display image with custom CSS class for glowing effect
     st.sidebar.markdown(
         f'<img src="data:image/png;base64,{img_base64}" class="cover-glow">',
@@ -124,48 +131,41 @@ def main():
     
     # Handle Chat and Update Modes
     if mode == "Talk with Euron Assistant":
+        memory = ConversationBufferMemory(memory_key="chat_history")
+
         if st.button("Start Recording"):
-            memory = ConversationBufferMemory(memory_key="chat_history")
             while True:
-                try:
-                    # Audio Stream Initialization
-                    audio = pyaudio.PyAudio()
-                    stream = audio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
+                # Audio Stream Initialization
+                audio = pyaudio.PyAudio()
+                stream = audio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
 
-                    # Record and save audio chunk
-                    record_audio_chunk(audio, stream)
+                # Record and save audio chunk
+                record_audio_chunk(audio, stream)
 
-                    text = transcribe_audio(model, chunk_file)
+                text = transcribe_audio(model, chunk_file)
 
-                    if text is not None:
-                        st.markdown(
-                            f'<div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">Customer 👤: {text}</div>',
-                            unsafe_allow_html=True)
-                        logger.info(f"User Question: {text}")
+                if text is not None:
+                    st.markdown(
+                        f'<div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">Customer 👤: {text}</div>',
+                        unsafe_allow_html=True)
+                    logger.info(f"User Question: {text}")
 
-                        os.remove(chunk_file)
+                    os.remove(chunk_file)
 
-                        # Send request to FastAPI for response
-                        response = requests.post("http://localhost:8000/chat", json={"message": text})
-                        response_llm = response.json().get("response", "Sorry, I didn't get that.")
-                        
-                        st.markdown(
-                            f'<div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">AI Assistant 🤖: {response_llm}</div>',
-                            unsafe_allow_html=True)
+                    response_llm = get_response_llm(user_question=text, memory=memory)
+                    st.markdown(
+                        f'<div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">AI Assistant 🤖: {response_llm}</div>',
+                        unsafe_allow_html=True)
 
-                        logger.info(f"AI Response: {response_llm}\n")
+                    logger.info(f"AI Response: {response_llm}\n")
 
-                        play_text_to_speech(text=response_llm)
-                    else:
-                        stream.stop_stream()
-                        stream.close()
-                        audio.terminate()
-                        logger.info("End Audio Stream as user did not say anything")
-                        break  # Exit the while loop
-                except OSError as e:
-                    logger.error(f"Error: {e}")
-                    logger.info("No default audio device found. Exiting...")
-                    sys.exit(1)
+                    play_text_to_speech(text=response_llm)
+                else:
+                    stream.stop_stream()
+                    stream.close()
+                    audio.terminate()
+                    logger.info("End Audio Stream as user did not say anything")
+                    break  # Exit the while loop
             logger.info("End Conversation")
 
 
